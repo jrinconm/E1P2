@@ -165,7 +165,20 @@ function moverHeroe(){
     }
 }
 function finpartida(){
-    alert("Héroe, has llegado al cofre en "+numeroTiradas+" tiradas")
+    alert("Héroe, has llegado al cofre en "+numeroTiradas+" tiradas");
+    let recordTiradas=localStorage.getItem("recordTiradas");
+    // Si no existe la variable en el localstorage
+    if ( recordTiradas === null ) {
+        alert("Héroe, has establecido un récord de tiradas con "+numeroTiradas+" tiradas");
+        localStorage.setItem("recordTiradas",numeroTiradas);
+        //Si existe, y no hemos superado el record
+    } else if(recordTiradas<=numeroTiradas){
+        alert("Récord no superado, el actual récord es "+recordTiradas)
+    } else {
+        // Lo podía poner en el primer if, pero se pide separado
+        alert("Héroe, has establecido un récord de tiradas con "+numeroTiradas+" tiradas");
+        localStorage.setItem("recordTiradas",numeroTiradas);
+    }
 }
 // Cuando voy a mover, limpio el color y los listeners
 function limpiaCeldas(){
