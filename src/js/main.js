@@ -1,3 +1,5 @@
+// Inicializo el contador de tiradas globalmente
+var tiradas=0;
 $(document).ready(function (){
     // añado al id enviar el listener click que lanzar la funcion compruebaNombre
     $("#enviar").click(compruebaNombre);
@@ -38,16 +40,19 @@ function compruebaMsg(msg){
         let nuevaTabla=$('<table id="tablero"></table>');
         $("#nuevoDiv").append(nuevaTabla);
         for(let x=0; x<10;x++){
-            let fila=$('<tr></tr>');
+            let fila=$('<tr></tr>');            
             $("#tablero").append(fila);
+            // Para controlar las filas, voy a ponerles una clase
+            $("#tablero tr:last").addClass('tr'+x);
             for(let y=0;y<10;y++){
                 let celda=$('<td><img src="suelo.png"/></td>');
                 $("#tablero tr:last").append(celda);
+                // Para controlar las celdas, voy a ponerles una clase
+                $("#tablero tr:last td:last").addClass('td'+y);
             }
         }
         // Cambio la primera fila primera celda a nuestro heroe
         $("#tablero tr:nth-child(1) td:nth-child(1) img").attr("src","link_sur.png");
-
         $("#jugar").prop('disabled',false);
         // Cambio boton enviar por boton tirar dado
         cambiaDado();
@@ -87,4 +92,6 @@ function tiraDado(){
     // Construyo la imagen que es "Alea_" y el numero
     let imagen = "Alea_" + tirada + ".png"
     $("#tirarDado").css("background-image","url("+imagen+")");
+    tiradas++;
+    console.log(tiradas);
 }
