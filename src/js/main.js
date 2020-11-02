@@ -34,6 +34,20 @@ function compruebaMsg(msg){
         }
         // Pongo el texto pedido
         $("#nuevoDiv").html("A luchar héroe :" + $("#nombre").val());
+        // Genero la tabla pedida
+        let nuevaTabla=$('<table id="tablero"></table>');
+        $("#nuevoDiv").append(nuevaTabla);
+        for(let x=0; x<10;x++){
+            let fila=$('<tr></tr>');
+            $("#tablero").append(fila);
+            for(let y=0;y<10;y++){
+                let celda=$('<td><img src="suelo.png"/></td>');
+                $("#tablero tr:last").append(celda);
+            }
+        }
+        // Cambio la primera fila primera celda a nuestro heroe
+        $("#tablero tr:nth-child(1) td:nth-child(1) img").attr("src","link_sur.png");
+
         $("#jugar").prop('disabled',false);
         // Cambio boton enviar por boton tirar dado
         cambiaDado();
