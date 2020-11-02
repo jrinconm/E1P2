@@ -46,14 +46,12 @@ function compruebaMsg(msg){
             // Para controlar las filas, voy a ponerles una clase
             $("#tablero tr:last").addClass('tr'+x);
             for(let y=0;y<10;y++){
-                let celda=$('<td><img src="suelo.png"/></td>');
+                let celda=$('<td><img /></td>');
                 $("#tablero tr:last").append(celda);
                 // Para controlar las celdas, voy a ponerles una clase
                 $("#tablero tr:last td:last").addClass('td'+y);
             }
         }
-        // Cambio la primera fila primera celda a nuestro heroe
-        $("#tablero tr:nth-child(1) td:nth-child(1) img").attr("src","link_sur.png");
         // Pongo nuestro heroe en su clase
         $("#tablero tr:nth-child(1) td:nth-child(1) img").addClass("heroe");
         // Habilito el jugar
@@ -103,49 +101,59 @@ function tiraDado(){
 }
 function generarOpciones(movimiento){
     //Posicion X
-    let posicionx=$(".heroe").parent().attr('class').slice(2);
+    let posicionx=$(".heroe").parent().attr('class').slice(2,3);
     //Posicion Y
-    let posiciony=$(".heroe").parent().parent().attr('class').slice(2);
-    //Por arriba
-    //Por sur
-    let posibleSur=calcularSur(posiciony,movimiento);
+    let posiciony=$(".heroe").parent().parent().attr('class').slice(2,3);
+    //Por el norte
+    let posibleNorte=calcularMovimiento(posiciony,-movimiento);
+    if(posibleNorte){
+        posibleCelda(posicionx,posibleNorte);
+    }
+    //Por el sur
+    let posibleSur=calcularMovimiento(posiciony,movimiento);
     if(posibleSur){
         posibleCelda(posicionx,posibleSur);
     }
-    //Por la izquierda
+    //Por el oeste
+    let posibleOeste=calcularMovimiento(posicionx,-movimiento);
+    if(posibleOeste){
+        posibleCelda(posibleOeste,posiciony);
+    }
     //Por la derecha
+    let posibleEste=calcularMovimiento(posicionx,movimiento);
+    if(posibleEste){
+        posibleCelda(posibleEste,posiciony);
+    }
 }
-function calcularSur(y,movimiento){
+function calcularMovimiento(posicion,movimiento){
     // Cambio y a numero
-    y=parseInt(y);
-    if(y+movimiento>9){
+    posicion=parseInt(posicion);
+    if(posicion+movimiento>9){
         return false;
     } else {
         //
-        return (y+movimiento);
+        return (posicion+movimiento);
     }
 }
 function posibleCelda(posicionX,posicionY){
-    // Construyo las clases
+    // Construyo las clases de las filas y celdas
     let claseX="td"+posicionX;
     let claseY="tr"+posicionY;
+    // Añado la clase posible a esa combinacion
     $("." + claseY + " ." + claseX).addClass('posible');
+    //Indico la orientacion del muñeco por clase
+    $("img","." + claseY + " ." + claseX).addClass('sur');
     //Le añado la opcion de mover el heroe al hacer click
     $("." + claseY + " ." + claseX).click(moverHeroe);
 }
 function moverHeroe(){
-    // Quito las opciones
+    // Quito las opciones y al heroe
     limpiaCeldas();
-    // Quito la clase heroe de la celda actual y la pinto de verde
-    $(".heroe").attr("src","suelo.png");
-    $(".heroe").removeClass("heroe");
     // Muevo la clase heroe a la nueva celda y lo pinto
     $("img",this).addClass("heroe");
-    $("img",this).attr("src","link_sur.png");
-    mueveHeroe(this);
-}
-function mueveHeroe(lugar){
-    //$(lugar).addClass("heroe");
+    //$("img",this).attr("src","link_sur.png");
+    // Vuelvo a dejar tirar dados
+    $("#tirarDado").click(tiraDado);
 }
 // Cuando he movido, limpio el color y los listeners
 function limpiaCeldas(){
@@ -155,4 +163,6 @@ function limpiaCeldas(){
         //Quito la clase
         $(this).removeClass("posible");
     })
+    // Al quitar la clase heroe se pinta de verde
+    $(".heroe").removeClass("heroe");
 }

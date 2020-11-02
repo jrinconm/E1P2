@@ -1,3 +1,20 @@
 .posible {
     border: 2px solid red;
 }
+img {
+    content:url(suelo.png);
+}
+/* Por defecto la imagen es mirando al sur*/
+.heroe {
+    content:url(link_sur.png);
+}
+.heroe.norte {
+    content:url(link_norte.png);
+}
+.heroe.este {
+    content:url(link_este.png);
+}
+.heroe.oeste {
+    content:url(link_este.png);
+    transform: rotateY(180deg);
+}
