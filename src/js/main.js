@@ -68,5 +68,9 @@ function cambiaDado(){
     $("#tirarDado").click(tiraDado);
 }
 function tiraDado(){
-    alert("He tirado dado");
+    // Aleatorio entre el 1 y el 6
+    let tirada = Math.floor(Math.random() * 5) + 1;
+    // Construyo la imagen que es "Alea_" y el numero
+    let imagen = "Alea_" + tirada + ".png"
+    $("#tirarDado").css("background-image","url("+imagen+")");
 }
