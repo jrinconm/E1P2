@@ -129,11 +129,30 @@ function posibleCelda(posicionX,posicionY){
     // Construyo las clases
     let claseX="td"+posicionX;
     let claseY="tr"+posicionY;
-    console.log("." + claseX + " ." + claseY);
-    $("." + claseY + " ." + claseX).css('border', '1px solid red');
+    $("." + claseY + " ." + claseX).addClass('posible');
     //Le añado la opcion de mover el heroe al hacer click
-    $("." + claseY + " ." + claseX).click(mueveHeroe);
+    $("." + claseY + " ." + claseX).click(moverHeroe);
 }
-function mueveHeroe(){
-
+function moverHeroe(){
+    // Quito las opciones
+    limpiaCeldas();
+    // Quito la clase heroe de la celda actual y la pinto de verde
+    $(".heroe").attr("src","suelo.png");
+    $(".heroe").removeClass("heroe");
+    // Muevo la clase heroe a la nueva celda y lo pinto
+    $("img",this).addClass("heroe");
+    $("img",this).attr("src","link_sur.png");
+    mueveHeroe(this);
+}
+function mueveHeroe(lugar){
+    //$(lugar).addClass("heroe");
+}
+// Cuando he movido, limpio el color y los listeners
+function limpiaCeldas(){
+    $(".posible").each(function(){
+        //Quito el listener
+        $(this).off("click");
+        //Quito la clase
+        $(this).removeClass("posible");
+    })
 }
