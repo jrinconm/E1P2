@@ -4,6 +4,10 @@
 img {
     content:url(suelo.png);
 }
+/* Pongo la imagen del cofre antes para que el heroe pueda cogerlo*/
+.cofre {
+    content:url(cofre.png);
+}
 /* Por defecto la imagen es mirando al sur*/
 .heroe {
     content:url(link_sur.png);

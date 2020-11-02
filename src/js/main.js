@@ -1,6 +1,6 @@
 'use strict';
 // Inicializo el contador de tiradas globalmente
-var tiradas=0;
+var numeroTiradas=0;
 $(document).ready(function (){
     // añado al id enviar el listener click que lanzar la funcion compruebaNombre
     $("#enviar").click(compruebaNombre);
@@ -54,6 +54,8 @@ function compruebaMsg(msg){
         }
         // Pongo nuestro heroe en su clase
         $("#tablero tr:nth-child(1) td:nth-child(1) img").addClass("heroe");
+        // Pongo el cofre en su clase
+        $("#tablero tr:nth-child(10) td:nth-child(10) img").addClass("cofre");
         // Habilito el jugar
         $("#jugar").prop('disabled',false);
         // Cambio boton enviar por boton tirar dado
@@ -94,7 +96,7 @@ function tiraDado(){
     // Construyo la imagen que es "Alea_" y el numero
     let imagen = "Alea_" + tirada + ".png"
     $("#tirarDado").css("background-image","url("+imagen+")");
-    tiradas++;
+    numeroTiradas++;
     generarOpciones(tirada);
     // Le quito el listener para que se mueva si o si
     $("#tirarDado").off("click");
@@ -105,24 +107,24 @@ function generarOpciones(movimiento){
     //Posicion Y
     let posiciony=$(".heroe").parent().parent().attr('class').slice(2,3);
     //Por el norte
-    let posibleNorte=calcularMovimiento(posiciony,-movimiento);
-    if(posibleNorte){
-        posibleCelda(posicionx,posibleNorte);
+    let posiblePosicion=calcularMovimiento(posiciony,-movimiento);
+    if(posiblePosicion){
+        posibleCelda(posicionx,posiblePosicion,"norte");
     }
     //Por el sur
-    let posibleSur=calcularMovimiento(posiciony,movimiento);
-    if(posibleSur){
-        posibleCelda(posicionx,posibleSur);
+    posiblePosicion=calcularMovimiento(posiciony,movimiento);
+    if(posiblePosicion){
+        posibleCelda(posicionx,posiblePosicion,"sur");
     }
     //Por el oeste
-    let posibleOeste=calcularMovimiento(posicionx,-movimiento);
-    if(posibleOeste){
-        posibleCelda(posibleOeste,posiciony);
+    posiblePosicion=calcularMovimiento(posicionx,-movimiento);
+    if(posiblePosicion){
+        posibleCelda(posiblePosicion,posiciony,"oeste");
     }
     //Por la derecha
-    let posibleEste=calcularMovimiento(posicionx,movimiento);
-    if(posibleEste){
-        posibleCelda(posibleEste,posiciony);
+    posiblePosicion=calcularMovimiento(posicionx,movimiento);
+    if(posiblePosicion){
+        posibleCelda(posiblePosicion,posiciony,"este");
     }
 }
 function calcularMovimiento(posicion,movimiento){
@@ -135,27 +137,37 @@ function calcularMovimiento(posicion,movimiento){
         return (posicion+movimiento);
     }
 }
-function posibleCelda(posicionX,posicionY){
+function posibleCelda(posicionX,posicionY,direccion){
     // Construyo las clases de las filas y celdas
     let claseX="td"+posicionX;
     let claseY="tr"+posicionY;
     // Añado la clase posible a esa combinacion
     $("." + claseY + " ." + claseX).addClass('posible');
     //Indico la orientacion del muñeco por clase
-    $("img","." + claseY + " ." + claseX).addClass('sur');
+    $("img","." + claseY + " ." + claseX).addClass(direccion);
     //Le añado la opcion de mover el heroe al hacer click
     $("." + claseY + " ." + claseX).click(moverHeroe);
 }
 function moverHeroe(){
+    //Guardo la posicion
+    let direccion=$("img",this).attr("class");
     // Quito las opciones y al heroe
     limpiaCeldas();
     // Muevo la clase heroe a la nueva celda y lo pinto
     $("img",this).addClass("heroe");
-    //$("img",this).attr("src","link_sur.png");
-    // Vuelvo a dejar tirar dados
-    $("#tirarDado").click(tiraDado);
+    $("img",this).addClass(direccion);
+    // compruebo si la clase heroe y la clase cofre están en el mismo lugar
+    if($(".heroe").hasClass("cofre")){
+        finpartida();
+    } else {
+        // Vuelvo a dejar tirar dados
+        $("#tirarDado").click(tiraDado);
+    }
 }
-// Cuando he movido, limpio el color y los listeners
+function finpartida(){
+    alert("Héroe, has llegado al cofre en "+numeroTiradas+" tiradas")
+}
+// Cuando voy a mover, limpio el color y los listeners
 function limpiaCeldas(){
     $(".posible").each(function(){
         //Quito el listener
@@ -163,6 +175,12 @@ function limpiaCeldas(){
         //Quito la clase
         $(this).removeClass("posible");
     })
+    let direcciones = ["norte","sur","este","oeste"];
+    for(const direccion of direcciones){
+        if($("."+direccion).length){
+            $("."+direccion).removeClass(direccion);    
+        }        
+    }
     // Al quitar la clase heroe se pinta de verde
     $(".heroe").removeClass("heroe");
 }
