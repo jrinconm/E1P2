@@ -15,8 +15,29 @@ function compruebaNombre(){
     } else {
         $.ajax({ method:"POST", url:"https://apuntesfpinformatica.es/DWEC/entregable1-2.php", 
         data:{ nombre : nombre} })
-        .done(function(msg) { alert("Recibo: " + msg); })
-        .fail(function() { alert("Error"); })
-        .always(function() { alert("Trabajo realizado"); }); // Ajax 
+        .done(function(msg) { compruebaMsg(msg); })
+        .fail(function() { alert("Ha fallado la consulta") })
+    }
+}
+// Compruebo el mensaje que responde el servidor
+function compruebaMsg(msg){
+    // Si el mensaje es error indico que deben ser impar las letras
+    if(msg=="ERROR"){
+        alert("Por favor introduzca una cantidad de letras impar");
+    // Si da OK realizamos los cambios
+    } else if (msg=="OK"){
+        // Creo un div con un p
+        let nuevoDiv=$('<div id="nuevoDiv"><p></p></div>')
+        if(!$("#nuevoDiv").length){
+            //Lo añado al cuerpo
+            $("body").append(nuevoDiv);
+        }
+
+        // Pongo el texto pedido
+        $("#nuevoDiv").html("A luchar héroe :" + $("#nombre").val());
+        $("#jugar").prop('disabled',false);
+    } else {
+        // Solo hay 2 opciones, pero por si acaso
+        alert("Opción no contemplada");
     }
 }
