@@ -1,3 +1,4 @@
+'use strict';
 // Inicializo el contador de tiradas globalmente
 var tiradas=0;
 $(document).ready(function (){
@@ -53,6 +54,9 @@ function compruebaMsg(msg){
         }
         // Cambio la primera fila primera celda a nuestro heroe
         $("#tablero tr:nth-child(1) td:nth-child(1) img").attr("src","link_sur.png");
+        // Pongo nuestro heroe en su clase
+        $("#tablero tr:nth-child(1) td:nth-child(1) img").addClass("heroe");
+        // Habilito el jugar
         $("#jugar").prop('disabled',false);
         // Cambio boton enviar por boton tirar dado
         cambiaDado();
@@ -93,5 +97,43 @@ function tiraDado(){
     let imagen = "Alea_" + tirada + ".png"
     $("#tirarDado").css("background-image","url("+imagen+")");
     tiradas++;
-    console.log(tiradas);
+    generarOpciones(tirada);
+    // Le quito el listener para que se mueva si o si
+    $("#tirarDado").off("click");
+}
+function generarOpciones(movimiento){
+    //Posicion X
+    let posicionx=$(".heroe").parent().attr('class').slice(2);
+    //Posicion Y
+    let posiciony=$(".heroe").parent().parent().attr('class').slice(2);
+    //Por arriba
+    //Por sur
+    let posibleSur=calcularSur(posiciony,movimiento);
+    if(posibleSur){
+        posibleCelda(posicionx,posibleSur);
+    }
+    //Por la izquierda
+    //Por la derecha
+}
+function calcularSur(y,movimiento){
+    // Cambio y a numero
+    y=parseInt(y);
+    if(y+movimiento>9){
+        return false;
+    } else {
+        //
+        return (y+movimiento);
+    }
+}
+function posibleCelda(posicionX,posicionY){
+    // Construyo las clases
+    let claseX="td"+posicionX;
+    let claseY="tr"+posicionY;
+    console.log("." + claseX + " ." + claseY);
+    $("." + claseY + " ." + claseX).css('border', '1px solid red');
+    //Le añado la opcion de mover el heroe al hacer click
+    $("." + claseY + " ." + claseX).click(mueveHeroe);
+}
+function mueveHeroe(){
+
 }
