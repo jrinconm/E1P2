@@ -24,19 +24,35 @@ function compruebaNombre(){
 }
 // Compruebo el mensaje que responde el servidor
 function compruebaMsg(msg){
+    //Inicializo por si ya hemos intentado validar con anterioridad
+    $("#jugar").prop('disabled',true);
+    $("#jugar").off("click");
+    // Creo un div con un p
+    let nuevoDiv=$('<div id="nuevoDiv"><p></p></div>')
+    if(!$("#nuevoDiv").length){
+        //Lo añado al cuerpo
+        $("body").append(nuevoDiv);
+    } else {
+        $("#nuevoDiv").html("");
+    }
     // Si el mensaje es error indico que deben ser impar las letras
     if(msg=="ERROR"){
         alert("Por favor introduzca una cantidad de letras impar");
     // Si da OK realizamos los cambios
     } else if (msg=="OK"){
-        // Creo un div con un p
-        let nuevoDiv=$('<div id="nuevoDiv"><p></p></div>')
-        if(!$("#nuevoDiv").length){
-            //Lo añado al cuerpo
-            $("body").append(nuevoDiv);
-        }
         // Pongo el texto pedido
         $("#nuevoDiv").html("A luchar héroe :" + $("#nombre").val());
+        // Habilito el jugar
+        $("#jugar").prop('disabled',false);
+        $("#jugar").click(jugar);
+    } else {
+        // Solo hay 2 opciones, pero por si acaso
+        alert("Opción no contemplada");
+    }
+}
+function jugar(){
+        //Deshabilito que pidan jugar 2 veces
+        $("#jugar").off("click");
         // Genero la tabla pedida
         let nuevaTabla=$('<table id="tablero"></table>');
         $("#nuevoDiv").append(nuevaTabla);
@@ -56,14 +72,8 @@ function compruebaMsg(msg){
         $("#tablero tr:nth-child(1) td:nth-child(1) img").addClass("heroe");
         // Pongo el cofre en su clase
         $("#tablero tr:nth-child(10) td:nth-child(10) img").addClass("cofre");
-        // Habilito el jugar
-        $("#jugar").prop('disabled',false);
         // Cambio boton enviar por boton tirar dado
         cambiaDado();
-    } else {
-        // Solo hay 2 opciones, pero por si acaso
-        alert("Opción no contemplada");
-    }
 }
 // Funcion que cambia el boton enviar por un boton "Dado"
 function cambiaDado(){
@@ -106,37 +116,40 @@ function generarOpciones(movimiento){
     let posicionx=$(".heroe").parent().attr('class').slice(2,3);
     //Posicion Y
     let posiciony=$(".heroe").parent().parent().attr('class').slice(2,3);
-    //Por el norte
+    //Marco posible movimiento por el norte
     let posiblePosicion=calcularMovimiento(posiciony,-movimiento);
     if(posiblePosicion){
         posibleCelda(posicionx,posiblePosicion,"norte");
     }
-    //Por el sur
+    //Marco posible movimiento por el sur
     posiblePosicion=calcularMovimiento(posiciony,movimiento);
     if(posiblePosicion){
         posibleCelda(posicionx,posiblePosicion,"sur");
     }
-    //Por el oeste
+    //Marco posible movimiento por el oeste
     posiblePosicion=calcularMovimiento(posicionx,-movimiento);
     if(posiblePosicion){
         posibleCelda(posiblePosicion,posiciony,"oeste");
     }
-    //Por la derecha
+    //Marco posible movimiento por la derecha
     posiblePosicion=calcularMovimiento(posicionx,movimiento);
     if(posiblePosicion){
         posibleCelda(posiblePosicion,posiciony,"este");
     }
 }
+// Compruebo si puedo mover la cantidad de cuadros
 function calcularMovimiento(posicion,movimiento){
     // Cambio y a numero
     posicion=parseInt(posicion);
+    // Si supero Los cuadrados posibles devuelvo false
     if(posicion+movimiento>9){
         return false;
     } else {
-        //
+        // Devuelvo la suma de la posicion y el movimiento
         return (posicion+movimiento);
     }
 }
+// Pinta la celda donde puede mover y añado listener
 function posibleCelda(posicionX,posicionY,direccion){
     // Construyo las clases de las filas y celdas
     let claseX="td"+posicionX;
@@ -148,6 +161,8 @@ function posibleCelda(posicionX,posicionY,direccion){
     //Le añado la opcion de mover el heroe al hacer click
     $("." + claseY + " ." + claseX).click(moverHeroe);
 }
+//Cambia la posicion del heroe a la nueva posicion
+// Comprueba si ha llegado al cofre
 function moverHeroe(){
     //Guardo la posicion
     let direccion=$("img",this).attr("class");
@@ -164,6 +179,8 @@ function moverHeroe(){
         $("#tirarDado").click(tiraDado);
     }
 }
+//Muestra los mensajes de fin de partida
+//Graba las estadisticas en localstorage si es preciso
 function finpartida(){
     alert("Héroe, has llegado al cofre en "+numeroTiradas+" tiradas");
     let recordTiradas=localStorage.getItem("recordTiradas");
