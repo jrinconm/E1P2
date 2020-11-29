@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 // Inicializo el contador de tiradas globalmente
 var numeroTiradas=0;
 $(document).ready(function (){
