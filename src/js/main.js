@@ -118,22 +118,22 @@ function generarOpciones(movimiento){
     let posiciony=$(".heroe").parent().parent().attr('class').slice(2,3);
     //Marco posible movimiento por el norte
     let posiblePosicion=calcularMovimiento(posiciony,-movimiento);
-    if(posiblePosicion){
+    if(posiblePosicion !== false){
         posibleCelda(posicionx,posiblePosicion,"norte");
     }
     //Marco posible movimiento por el sur
     posiblePosicion=calcularMovimiento(posiciony,movimiento);
-    if(posiblePosicion){
+    if(posiblePosicion !== false){
         posibleCelda(posicionx,posiblePosicion,"sur");
     }
     //Marco posible movimiento por el oeste
     posiblePosicion=calcularMovimiento(posicionx,-movimiento);
-    if(posiblePosicion){
+    if(posiblePosicion !== false){
         posibleCelda(posiblePosicion,posiciony,"oeste");
     }
     //Marco posible movimiento por la derecha
     posiblePosicion=calcularMovimiento(posicionx,movimiento);
-    if(posiblePosicion){
+    if(posiblePosicion !== false){
         posibleCelda(posiblePosicion,posiciony,"este");
     }
 }
