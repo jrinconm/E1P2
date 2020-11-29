@@ -36,10 +36,10 @@ function compruebaMsg(msg){
         $("#nuevoDiv").html("");
     }
     // Si el mensaje es error indico que deben ser impar las letras
-    if(msg=="ERROR"){
+    if(msg==="ERROR"){
         alert("Por favor introduzca una cantidad de letras impar");
     // Si da OK realizamos los cambios
-    } else if (msg=="OK"){
+    } else if (msg==="OK"){
         // Pongo el texto pedido
         $("#nuevoDiv").html("A luchar héroe :" + $("#nombre").val());
         // Habilito el jugar
