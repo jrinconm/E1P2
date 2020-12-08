@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 "use strict";
+=======
+'use strict';
+
+>>>>>>> Otra_rama
 // Inicializo el contador de tiradas globalmente
 var numeroTiradas=0;
 $(document).ready(function (){
